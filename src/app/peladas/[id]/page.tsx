@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/Card'
 import { cn, formatDate } from '@/lib/utils'
 import { MapPin, Star, Target, Handshake, Trophy, TrendingDown } from 'lucide-react'
 
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 interface Props { params: Promise<{ id: string }> }

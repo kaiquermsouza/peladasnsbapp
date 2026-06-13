@@ -7,6 +7,7 @@ import { formatDate } from '@/lib/utils'
 import { Plus, MapPin, Users, Settings } from 'lucide-react'
 import MatchesPlayerClient from './MatchesPlayerClient'
 
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 export default async function MatchesPage() {

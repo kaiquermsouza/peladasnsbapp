@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Button from '@/components/ui/Button'
 import { ArrowLeft } from 'lucide-react'
 
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 interface Props { params: Promise<{ id: string }> }

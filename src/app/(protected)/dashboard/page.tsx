@@ -8,6 +8,7 @@ import Countdown from '@/components/ui/Countdown'
 import { formatDateShort } from '@/lib/utils'
 import { Target, Handshake, Calendar, Star, ChevronRight, Vote, CheckCircle, Clock } from 'lucide-react'
 
+export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 
 interface MatchRef {
