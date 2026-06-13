@@ -2,8 +2,21 @@
 
 import { useState } from 'react'
 import { PlayerStats } from '@/types/database'
-import { PlayerVictories, TeamWinStats } from '@/app/rankings/page'
 import Avatar from '@/components/ui/Avatar'
+
+export interface PlayerVictories {
+  player_id: string
+  name: string
+  nickname: string
+  avatar_url: string | null
+  victories: number
+}
+
+export interface TeamWinStats {
+  white_wins: number
+  black_wins: number
+  draws: number
+}
 import { Card } from '@/components/ui/Card'
 import { cn } from '@/lib/utils'
 import { Target, Handshake, Star, Calendar, Trophy, Shield } from 'lucide-react'
@@ -29,11 +42,6 @@ export default function RankingsClient({ stats, playerVictories, teamStats }: Pr
   const [activeTab, setActiveTab] = useState<RankingKey>('score')
 
   const isVictoriesTab = activeTab === 'victories'
-
-  // For victories tab we use a different data source
-  type SortablePlayer =
-    | (PlayerStats & { _value: number; _unit: string; _field: keyof PlayerStats })
-    | (PlayerVictories & { _value: number; _unit: string })
 
   const statsTabMeta: Record<Exclude<RankingKey, 'victories'>, { field: keyof PlayerStats; unit: string; label: string }> = {
     score:    { field: 'total_score',     unit: 'pt',      label: 'Geral' },

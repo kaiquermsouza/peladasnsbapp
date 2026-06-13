@@ -1,23 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import RankingsClient from '@/components/rankings/RankingsClient'
+import type { PlayerVictories, TeamWinStats } from '@/components/rankings/RankingsClient'
 import Link from 'next/link'
 
 export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
-
-export interface PlayerVictories {
-  player_id: string
-  name: string
-  nickname: string
-  avatar_url: string | null
-  victories: number
-}
-
-export interface TeamWinStats {
-  white_wins: number
-  black_wins: number
-  draws: number
-}
 
 export default async function PublicRankingsPage() {
   const supabase = await createClient()
