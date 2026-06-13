@@ -7,10 +7,11 @@ import Button from '@/components/ui/Button'
 import { ArrowLeft } from 'lucide-react'
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function ManageMatchPage({ params }: Props) {
+  const { id } = await params
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -26,15 +27,15 @@ export default async function ManageMatchPage({ params }: Props) {
   const { data: match } = await supabase
     .from('matches')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!match) notFound()
 
   const [{ data: allPlayers }, { data: matchPlayers }, { data: ratingVoters }] = await Promise.all([
     supabase.from('profiles').select('*').eq('active', true).order('name'),
-    supabase.from('match_players').select('*').eq('match_id', params.id),
-    supabase.from('player_ratings').select('voter_id').eq('match_id', params.id),
+    supabase.from('match_players').select('*').eq('match_id', id),
+    supabase.from('player_ratings').select('voter_id').eq('match_id', id),
   ])
 
   const uniqueVoters = new Set(ratingVoters?.map((r) => r.voter_id) ?? []).size

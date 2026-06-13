@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient, createClient } from '@/lib/supabase/server'
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
@@ -16,13 +16,14 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json({ error: 'Permissão negada' }, { status: 403 })
   }
 
+  const { id } = await params
   const body = await request.json()
   const adminClient = createAdminClient()
 
   const { data, error } = await adminClient
     .from('profiles')
     .update({ active: body.active })
-    .eq('id', params.id)
+    .eq('id', id)
     .select()
     .single()
 

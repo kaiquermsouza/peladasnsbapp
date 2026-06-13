@@ -8,7 +8,7 @@ import { MapPin, Star, Target, Handshake, Trophy, TrendingDown } from 'lucide-re
 
 export const revalidate = 60
 
-interface Props { params: { id: string } }
+interface Props { params: Promise<{ id: string }> }
 
 interface PlayerResult {
   player_id: string
@@ -25,12 +25,13 @@ interface PlayerResult {
 }
 
 export default async function PeladaResultPage({ params }: Props) {
+  const { id } = await params
   const supabase = createClient()
 
   const { data: match } = await supabase
     .from('matches')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!match) notFound()
@@ -54,13 +55,13 @@ export default async function PeladaResultPage({ params }: Props) {
   const { data: ratings } = await supabase
     .from('player_ratings')
     .select('rated_player_id, rating, is_mvp_vote')
-    .eq('match_id', params.id)
+    .eq('match_id', id)
 
   // Get match players with profiles and team
   const { data: matchPlayers } = await supabase
     .from('match_players')
     .select('player_id, goals, assists, team, profiles(id, name, nickname, avatar_url)')
-    .eq('match_id', params.id)
+    .eq('match_id', id)
     .eq('confirmed', true)
 
   if (!ratings || !matchPlayers) notFound()

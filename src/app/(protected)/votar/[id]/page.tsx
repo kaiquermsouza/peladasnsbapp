@@ -8,9 +8,10 @@ import { ArrowLeft } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
-interface Props { params: { id: string } }
+interface Props { params: Promise<{ id: string }> }
 
 export default async function VotarPage({ params }: Props) {
+  const { id } = await params
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -18,7 +19,7 @@ export default async function VotarPage({ params }: Props) {
   const { data: match } = await supabase
     .from('matches')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (!match) notFound()
@@ -27,7 +28,7 @@ export default async function VotarPage({ params }: Props) {
   const { data: mySlot } = await supabase
     .from('match_players')
     .select('*')
-    .eq('match_id', params.id)
+    .eq('match_id', id)
     .eq('player_id', user.id)
     .eq('confirmed', true)
     .single()
@@ -75,14 +76,14 @@ export default async function VotarPage({ params }: Props) {
   const { data: myVotes } = await supabase
     .from('player_ratings')
     .select('*')
-    .eq('match_id', params.id)
+    .eq('match_id', id)
     .eq('voter_id', user.id)
 
   // Get all participants except current user
   const { data: matchPlayers } = await supabase
     .from('match_players')
     .select('*, profiles(id, name, nickname, avatar_url)')
-    .eq('match_id', params.id)
+    .eq('match_id', id)
     .eq('confirmed', true)
     .neq('player_id', user.id)
 
@@ -101,7 +102,7 @@ export default async function VotarPage({ params }: Props) {
       </div>
 
       <VotarClient
-        matchId={params.id}
+        matchId={id}
         currentUserId={user.id}
         matchPlayers={(matchPlayers ?? []).filter((mp) => mp.profiles != null).map((mp) => ({
           player_id: mp.player_id,
