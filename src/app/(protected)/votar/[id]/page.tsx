@@ -80,13 +80,21 @@ export default async function VotarPage({ params }: Props) {
     .eq('match_id', id)
     .eq('voter_id', user.id)
 
-  // Get all participants except current user
-  const { data: matchPlayers } = await supabase
+  // Current user's team — determines which team they can vote for
+  const myTeam = mySlot.team as 'white' | 'black' | null
+
+  // Players from the OPPOSITE team only (if team is assigned)
+  let playersQuery = supabase
     .from('match_players')
     .select('*, profiles(id, name, nickname, avatar_url)')
     .eq('match_id', id)
     .eq('confirmed', true)
     .neq('player_id', user.id)
+
+  if (myTeam === 'white') playersQuery = playersQuery.eq('team', 'black')
+  else if (myTeam === 'black') playersQuery = playersQuery.eq('team', 'white')
+
+  const { data: matchPlayers } = await playersQuery
 
   return (
     <div className="max-w-lg space-y-6">
@@ -105,6 +113,7 @@ export default async function VotarPage({ params }: Props) {
       <VotarClient
         matchId={id}
         currentUserId={user.id}
+        myTeam={myTeam}
         matchPlayers={(matchPlayers ?? []).filter((mp) => mp.profiles != null).map((mp) => ({
           player_id: mp.player_id,
           goals: mp.goals,

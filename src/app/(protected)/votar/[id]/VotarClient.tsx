@@ -22,6 +22,7 @@ interface MatchPlayerSlot {
 interface Props {
   matchId: string
   currentUserId: string
+  myTeam: 'white' | 'black' | null
   matchPlayers: MatchPlayerSlot[]
   existingVotes: PlayerRating[]
   votingClosesAt: string
@@ -35,6 +36,7 @@ interface VoteState {
 export default function VotarClient({
   matchId,
   currentUserId,
+  myTeam,
   matchPlayers,
   existingVotes,
   votingClosesAt,
@@ -140,6 +142,22 @@ export default function VotarClient({
 
   return (
     <div className="space-y-4">
+      {/* Team context banner */}
+      {myTeam && (
+        <div className={`flex items-center gap-2 rounded-xl px-4 py-3 border text-sm font-medium ${
+          myTeam === 'white'
+            ? 'bg-slate-100/5 border-slate-300/20 text-slate-200'
+            : 'bg-slate-900/60 border-slate-600/40 text-slate-300'
+        }`}>
+          <span className="text-lg">{myTeam === 'white' ? '🤍' : '🖤'}</span>
+          <span>
+            Você é do <strong>Time {myTeam === 'white' ? 'Branco' : 'Preto'}</strong> — avaliando o{' '}
+            <strong>Time {myTeam === 'white' ? 'Preto' : 'Branco'}</strong>
+          </span>
+          <span className="text-lg ml-auto">{myTeam === 'white' ? '🖤' : '🤍'}</span>
+        </div>
+      )}
+
       {/* Countdown header */}
       <div className="flex items-center justify-between bg-slate-800 border border-slate-700 rounded-xl px-4 py-3">
         <p className="text-slate-400 text-sm">Dê nota de 1 a 10 para cada jogador e escolha 1 MVP.</p>
