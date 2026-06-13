@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import RankingsClient from '@/components/rankings/RankingsClient'
 import Link from 'next/link'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 export default async function PublicRankingsPage() {
   const supabase = await createClient()
