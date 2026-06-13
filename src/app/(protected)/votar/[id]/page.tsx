@@ -12,7 +12,7 @@ interface Props { params: Promise<{ id: string }> }
 
 export default async function VotarPage({ params }: Props) {
   const { id } = await params
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 

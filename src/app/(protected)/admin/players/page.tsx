@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import PlayersClient from './PlayersClient'
 
 export default async function PlayersPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 

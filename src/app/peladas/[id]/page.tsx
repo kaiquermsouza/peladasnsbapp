@@ -26,7 +26,7 @@ interface PlayerResult {
 
 export default async function PeladaResultPage({ params }: Props) {
   const { id } = await params
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: match } = await supabase
     .from('matches')

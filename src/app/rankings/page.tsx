@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const revalidate = 60
 
 export default async function PublicRankingsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: stats } = await supabase
     .from('player_stats')
